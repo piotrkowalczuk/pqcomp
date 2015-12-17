@@ -1,0 +1,13 @@
+language: go
+addons:
+  postgresql: '9.3'
+go:
+- tip
+install:
+- go get
+script:
+- go test
+notifications:
+  slack:
+    secure: $SLACK_SECURE
+
