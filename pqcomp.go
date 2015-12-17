@@ -40,8 +40,8 @@ type Composer struct {
 // New allocates new Composer and pre-allocates space for given amount of arguments and expressions.
 // Each child expression passed to the constructor creates new child Composer
 // with pre-allocated space for expressions.
-func New(arguments, numberOfExpressions int, numberOfChildExpressions ...int) *Composer {
-	return neww(nil, arguments, numberOfExpressions, numberOfChildExpressions...)
+func New(arguments, nbOfExpressions int, nbOfChildExpressions ...int) *Composer {
+	return neww(nil, arguments, nbOfExpressions, nbOfChildExpressions...)
 }
 
 func neww(parent *Composer, args, pexpr int, cexpr ...int) *Composer {
@@ -102,21 +102,21 @@ func (c *Composer) addExpr(key, expr string, value interface{}) {
 
 // Compose returns next available composer
 // or if pool of pre-allocated Composer's is empty allocates new one.
-func (c *Composer) Compose(cexprs ...int) (comp *Composer) {
+func (c *Composer) Compose(nbOfChildExpressions ...int) (comp *Composer) {
 	if len(c.childs) > c.composed {
 		comp = c.childs[c.composed]
 
-		if len(cexprs) != 0 {
-			comp.childs = make([]*Composer, 0, len(cexprs))
+		if len(nbOfChildExpressions) != 0 {
+			comp.childs = make([]*Composer, 0, len(nbOfChildExpressions))
 			for i := range comp.childs {
-				comp.childs[i] = neww(c, cexprs[i], cexprs[i])
+				comp.childs[i] = neww(c, nbOfChildExpressions[i], nbOfChildExpressions[i])
 			}
 		}
 		c.composed++
 		return
 	}
 
-	comp = neww(c, 0, 0, cexprs...)
+	comp = neww(c, 0, 0, nbOfChildExpressions...)
 	c.childs = append(c.childs, comp)
 	c.composed++
 	return
