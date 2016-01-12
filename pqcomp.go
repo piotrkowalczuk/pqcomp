@@ -18,6 +18,10 @@ const (
 	GTE = ">="
 	// LTE represents lower than or equal operator.
 	LTE = "<="
+	// DESC represents descendant way of sorting.
+	DESC = "DESC"
+	// ASC represents ascendant way of sorting.
+	ASC = "ASC"
 )
 
 // Appearer wraps Appear function.
