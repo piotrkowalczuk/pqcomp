@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/piotrkowalczuk/nilt"
 	"github.com/piotrkowalczuk/pqcomp"
 )
 
@@ -67,6 +68,19 @@ func TestComposer_AddExpr(t *testing.T) {
 
 	if update.Len() != expected {
 		t.Errorf("where expression length mismatch, expected %d but got %d", expected, update.Len())
+	}
+}
+
+func TestComposer_AddExpr_nil(t *testing.T) {
+	comp := pqcomp.New(0, 0)
+	func(comp *pqcomp.Composer, s *nilt.String, i *nilt.Int) {
+		comp.AddExpr("v1", pqcomp.E, nil)
+		comp.AddExpr("v2", pqcomp.E, nil)
+		comp.AddExpr("v3", pqcomp.E, nil)
+	}(comp, nil, nil)
+
+	if comp.Len() != 0 {
+		t.Errorf("length mismatch, expected 0 but got %d: %#v", comp.Len(), comp.Args())
 	}
 }
 

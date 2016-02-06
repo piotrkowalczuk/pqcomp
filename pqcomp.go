@@ -2,7 +2,11 @@ package pqcomp
 
 import (
 	"database/sql"
+	"fmt"
+	"reflect"
 	"strconv"
+
+	"github.com/piotrkowalczuk/nilt"
 )
 
 const (
@@ -72,6 +76,10 @@ func (c *Composer) AddArg(arg interface{}) {
 // AddExpr adds expression if value meet certain requirements.
 // To know more please read the source code.
 func (c *Composer) AddExpr(key, operator string, value interface{}) {
+	if value == nil {
+		return
+	}
+
 	switch v := value.(type) {
 	case Appearer:
 		if v.Appear() {
@@ -81,7 +89,24 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 		if v.Valid {
 			c.addExpr(key, operator, value)
 		}
+	case *nilt.Bool:
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
+	case nilt.Bool:
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
 	case *sql.NullString:
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
+	case *nilt.String:
+		fmt.Println("*nilt.String WTF", v.Valid)
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
+	case nilt.String:
 		if v.Valid {
 			c.addExpr(key, operator, value)
 		}
@@ -89,12 +114,36 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 		if v.Valid {
 			c.addExpr(key, operator, value)
 		}
+	case *nilt.Int64:
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
+	case nilt.Int64:
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
 	case *sql.NullFloat64:
 		if v.Valid {
 			c.addExpr(key, operator, value)
 		}
+	case *nilt.Float64:
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
+	case nilt.Float64:
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
 	default:
-		c.addExpr(key, operator, value)
+		vo := reflect.ValueOf(v)
+		switch vo.Kind() {
+		case reflect.Slice:
+			if !vo.IsNil() {
+				c.addExpr(key, operator, value)
+			}
+		default:
+			c.addExpr(key, operator, value)
+		}
 	}
 }
 
