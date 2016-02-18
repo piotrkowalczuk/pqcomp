@@ -122,6 +122,14 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 		if v.Valid {
 			c.addExpr(key, operator, value)
 		}
+	case *nilt.Int32:
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
+	case nilt.Int32:
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
 	case *sql.NullFloat64:
 		if v.Valid {
 			c.addExpr(key, operator, value)
