@@ -134,6 +134,14 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 		if v.Valid {
 			c.addExpr(key, operator, value)
 		}
+	case *nilt.Float32:
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
+	case nilt.Float32:
+		if v.Valid {
+			c.addExpr(key, operator, value)
+		}
 	case *nilt.Float64:
 		if v.Valid {
 			c.addExpr(key, operator, value)
