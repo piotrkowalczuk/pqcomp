@@ -1,1 +1,3 @@
 # pqcomp [![GoDoc](https://godoc.org/github.com/piotrkowalczuk/pqcomp?status.svg)](http://godoc.org/github.com/piotrkowalczuk/pqcomp) [![Build Status](https://travis-ci.org/piotrkowalczuk/pqcomp.svg)](https://travis-ci.org/piotrkowalczuk/pqcomp)
+
+Dead simple query builder that support null types from [sql](https://golang.org/pkg/database/sql/) package and [nilt](github.com/piotrkowalczuk/nilt), but also provide interface [Appearer](https://godoc.org/github.com/piotrkowalczuk/pqcomp#Appearer). Detailed information and examples can be found in the [documentation](https://godoc.org/github.com/piotrkowalczuk/pqcomp#Composer).
