@@ -15,6 +15,8 @@ const (
 	IN = "IN"
 	// NULL represents NULL keyword.
 	NULL = "NULL"
+	// NOT_NULL represents NOT NULL keywords.
+	NOT_NULL = "NOT NULL"
 	// IS represents IS operator.
 	IS = "IS"
 	// E represents equal operator.
