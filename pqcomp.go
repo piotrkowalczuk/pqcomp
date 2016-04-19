@@ -2,7 +2,6 @@ package pqcomp
 
 import (
 	"database/sql"
-	"fmt"
 	"reflect"
 	"strconv"
 
@@ -10,6 +9,14 @@ import (
 )
 
 const (
+	// LIKE represents LIKE operator.
+	LIKE = "LIKE"
+	// IN represents IN operator.
+	IN = "IN"
+	// NULL represents NULL keyword.
+	NULL = "NULL"
+	// IS represents IS operator.
+	IS = "IS"
 	// E represents equal operator.
 	E = "="
 	// NE represents not equal operator.
@@ -102,7 +109,6 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 			c.addExpr(key, operator, value)
 		}
 	case *nilt.String:
-		fmt.Println("*nilt.String WTF", v.Valid)
 		if v.Valid {
 			c.addExpr(key, operator, value)
 		}
