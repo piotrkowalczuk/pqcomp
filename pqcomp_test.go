@@ -6,7 +6,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/piotrkowalczuk/nilt"
 	"github.com/piotrkowalczuk/pqcomp"
 )
 
@@ -133,10 +132,10 @@ func TestComposer_AddExpr_sql(t *testing.T) {
 
 func TestComposer_AddExpr_nil(t *testing.T) {
 	comp := pqcomp.New(0, 0)
-	func(comp *pqcomp.Composer, s *nilt.String, i *nilt.Int) {
+	func(comp *pqcomp.Composer, s *sql.NullString, i *sql.NullInt64) {
 		comp.AddExpr("v1", pqcomp.E, nil)
-		comp.AddExpr("v2", pqcomp.E, nil)
-		comp.AddExpr("v3", pqcomp.E, nil)
+		comp.AddExpr("v2", pqcomp.E, s)
+		comp.AddExpr("v3", pqcomp.E, i)
 	}(comp, nil, nil)
 
 	if comp.Len() != 0 {

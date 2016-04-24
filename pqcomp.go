@@ -129,19 +129,19 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 			c.addExpr(key, operator, value)
 		}
 	case *sql.NullBool:
-		if v.Valid {
+		if v != nil && v.Valid {
 			c.addExpr(key, operator, value)
 		}
 	case *sql.NullString:
-		if v.Valid {
+		if v != nil && v.Valid {
 			c.addExpr(key, operator, value)
 		}
 	case *sql.NullInt64:
-		if v.Valid {
+		if v != nil && v.Valid {
 			c.addExpr(key, operator, value)
 		}
 	case *sql.NullFloat64:
-		if v.Valid {
+		if v != nil && v.Valid {
 			c.addExpr(key, operator, value)
 		}
 	default:
