@@ -2,11 +2,13 @@ language: go
 addons:
   postgresql: '9.3'
 go:
-- tip
+  - tip
 install:
-- go get
+  - go get
 script:
-- go test
+  - go test -v -coverprofile=profile.out -covermode=atomic
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 notifications:
   slack:
     secure: $SLACK_SECURE
