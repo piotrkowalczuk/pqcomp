@@ -3,6 +3,7 @@ package pqcomp_test
 import (
 	"database/sql"
 	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/piotrkowalczuk/nilt"
@@ -69,6 +70,65 @@ func TestComposer_AddExpr(t *testing.T) {
 	if update.Len() != expected {
 		t.Errorf("where expression length mismatch, expected %d but got %d", expected, update.Len())
 	}
+}
+
+func TestComposer_AddExpr_types(t *testing.T) {
+	cases := map[string]interface{}{
+		"string":          "text",
+		"int":             1,
+		"int8":            int8(2),
+		"int16":           int16(3),
+		"int32":           int32(4),
+		"int64":           int64(5),
+		"uint":            uint(6),
+		"uint8":           uint8(7),
+		"uint16":          uint16(8),
+		"uint32":          uint32(9),
+		"uint64":          uint64(10),
+		"float32":         float32(11.11),
+		"float64":         float64(12.12),
+		"sql.NullString":  sql.NullString{String: "null-text", Valid: true},
+		"sql.NullInt64":   sql.NullInt64{Int64: 13, Valid: true},
+		"sql.NullFloat64": sql.NullFloat64{Float64: 14.14, Valid: true},
+		"sql.NullBool":    sql.NullBool{Bool: true, Valid: true},
+		"[]byte":          []byte("abc"),
+		"byte":            []byte("a")[0],
+		"rune":            rune("r"[0]),
+	}
+
+CasesLoop:
+	for k, v := range cases {
+		comp := pqcomp.New(0, 0)
+		comp.AddExpr(k, pqcomp.E, v)
+		args := comp.Args()
+
+		if len(args) != 1 {
+			t.Errorf("wrong args slice length, expected %d but got %d", 0, len(args))
+			continue CasesLoop
+		}
+		if !reflect.DeepEqual(v, args[0]) {
+			t.Errorf("wrong argument, expected %d but got %d", v, args[0])
+			continue CasesLoop
+		}
+		t.Logf("%s: pass for type: %T and value: %v", k, v, v)
+	}
+}
+
+func TestComposer_AddExpr_sql(t *testing.T) {
+	comp := pqcomp.New(0, 0)
+	comp.AddExpr("int64-valid", pqcomp.E, &sql.NullInt64{Int64: 1, Valid: true})
+	comp.AddExpr("int64-invalid", pqcomp.E, &sql.NullInt64{Int64: 2, Valid: false})
+	comp.AddExpr("string-valid", pqcomp.E, &sql.NullString{String: "3", Valid: true})
+	comp.AddExpr("string-invalid", pqcomp.E, &sql.NullString{String: "4", Valid: false})
+	comp.AddExpr("float64-valid", pqcomp.E, &sql.NullFloat64{Float64: 5, Valid: true})
+	comp.AddExpr("float64-invalid", pqcomp.E, &sql.NullFloat64{Float64: 6, Valid: false})
+	comp.AddExpr("bool-valid", pqcomp.E, &sql.NullBool{Bool: true, Valid: true})
+	comp.AddExpr("bool-invalid", pqcomp.E, &sql.NullBool{Bool: true, Valid: false})
+
+	if len(comp.Args()) != 4 {
+		t.Fatalf("wrong number of arguments, expected %d but got %d", 4, len(comp.Args()))
+	}
+
 }
 
 func TestComposer_AddExpr_nil(t *testing.T) {

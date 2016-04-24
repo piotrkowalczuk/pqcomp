@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"reflect"
 	"strconv"
-
-	"github.com/piotrkowalczuk/nilt"
 )
 
 const (
@@ -62,7 +60,7 @@ func New(arguments, nbOfExpressions int, nbOfChildExpressions ...int) *Composer 
 }
 
 func neww(parent *Composer, args, pexpr int, cexpr ...int) *Composer {
-	comp := Composer{
+	comp := &Composer{
 		keys:      make([]string, 0, pexpr),
 		operators: make([]string, 0, pexpr),
 		arguments: make([]interface{}, 0, args),
@@ -72,9 +70,9 @@ func neww(parent *Composer, args, pexpr int, cexpr ...int) *Composer {
 	}
 
 	for i := 0; i < len(cexpr); i++ {
-		comp.childs[i] = neww(&comp, cexpr[i], cexpr[i])
+		comp.childs[i] = neww(comp, cexpr[i], cexpr[i])
 	}
-	return &comp
+	return comp
 }
 
 // AddArg add static argument.
@@ -90,6 +88,42 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 	}
 
 	switch v := value.(type) {
+	case []byte:
+		if v != nil {
+			c.addExpr(key, operator, value)
+		}
+	case string:
+		c.addExpr(key, operator, value)
+	case int64:
+		c.addExpr(key, operator, value)
+	case int32:
+		c.addExpr(key, operator, value)
+	case int16:
+		c.addExpr(key, operator, value)
+	case int8:
+		c.addExpr(key, operator, value)
+	case int:
+		c.addExpr(key, operator, value)
+	case float32:
+		c.addExpr(key, operator, value)
+	case float64:
+		c.addExpr(key, operator, value)
+	case uint64:
+		c.addExpr(key, operator, value)
+	case uint32:
+		c.addExpr(key, operator, value)
+	case uint16:
+		c.addExpr(key, operator, value)
+	case uint8:
+		c.addExpr(key, operator, value)
+	case uint:
+		c.addExpr(key, operator, value)
+	case complex64:
+		c.addExpr(key, operator, value)
+	case complex128:
+		c.addExpr(key, operator, value)
+	case bool:
+		c.addExpr(key, operator, value)
 	case Appearer:
 		if v.Appear() {
 			c.addExpr(key, operator, value)
@@ -98,23 +132,7 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 		if v.Valid {
 			c.addExpr(key, operator, value)
 		}
-	case *nilt.Bool:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
-	case nilt.Bool:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
 	case *sql.NullString:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
-	case *nilt.String:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
-	case nilt.String:
 		if v.Valid {
 			c.addExpr(key, operator, value)
 		}
@@ -122,39 +140,7 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 		if v.Valid {
 			c.addExpr(key, operator, value)
 		}
-	case *nilt.Int64:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
-	case nilt.Int64:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
-	case *nilt.Int32:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
-	case nilt.Int32:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
 	case *sql.NullFloat64:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
-	case *nilt.Float32:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
-	case nilt.Float32:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
-	case *nilt.Float64:
-		if v.Valid {
-			c.addExpr(key, operator, value)
-		}
-	case nilt.Float64:
 		if v.Valid {
 			c.addExpr(key, operator, value)
 		}
@@ -241,7 +227,7 @@ func (b *Composer) Next() bool {
 	return false
 }
 
-// Reset set cursor back to 0
+// Reset set cursor back to 0.
 func (b *Composer) Reset() {
 	b.idx = 0
 }
