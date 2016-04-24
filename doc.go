@@ -1,4 +1,4 @@
-/**
+/*
 Package pqcomp provides dead simple query builder that support null types from sql package, but also provide interface Appearer.
 
 
