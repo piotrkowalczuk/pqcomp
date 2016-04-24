@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/piotrkowalczuk/pqcomp"
 )
@@ -126,6 +127,23 @@ func TestComposer_AddExpr_sql(t *testing.T) {
 
 	if len(comp.Args()) != 4 {
 		t.Fatalf("wrong number of arguments, expected %d but got %d", 4, len(comp.Args()))
+	}
+
+}
+
+func TestComposer_AddExpr_time(t *testing.T) {
+	var tt *time.Time
+	now := time.Now()
+
+	comp := pqcomp.New(0, 0)
+	comp.AddExpr("time", pqcomp.E, now)
+	comp.AddExpr("time-zero", pqcomp.E, time.Time{})
+	comp.AddExpr("time-pointer", pqcomp.E, &now)
+	comp.AddExpr("time-pointer-zero", pqcomp.E, &time.Time{})
+	comp.AddExpr("time-pointer-zero", pqcomp.E, tt)
+
+	if len(comp.Args()) != 2 {
+		t.Fatalf("wrong number of arguments, expected %d but got %d", 2, len(comp.Args()))
 	}
 
 }

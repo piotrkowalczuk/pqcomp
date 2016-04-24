@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"reflect"
 	"strconv"
+	"time"
 )
 
 const (
@@ -124,6 +125,14 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 		c.addExpr(key, operator, value)
 	case bool:
 		c.addExpr(key, operator, value)
+	case *time.Time:
+		if v != nil && !v.IsZero() {
+			c.addExpr(key, operator, value)
+		}
+	case time.Time:
+		if !v.IsZero() {
+			c.addExpr(key, operator, value)
+		}
 	case Appearer:
 		if v.Appear() {
 			c.addExpr(key, operator, value)
