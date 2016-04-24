@@ -179,8 +179,6 @@ func BenchmarkComposer_New(b *testing.B) {
 	b.ReportAllocs()
 
 	for n := 0; n < b.N; n++ {
-		b.StartTimer()
-		comp = pqcomp.New(n, n)
-		b.StopTimer()
+		comp = pqcomp.New(100, 100)
 	}
 }
