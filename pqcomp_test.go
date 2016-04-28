@@ -114,6 +114,16 @@ CasesLoop:
 	}
 }
 
+func TestComposer_AddArg_slices(t *testing.T) {
+	comp := pqcomp.New(0, 0)
+	comp.AddExpr("[]string", pqcomp.IN, []string{"1", "2", "3"})
+	comp.AddExpr("[]int64", pqcomp.IN, []int64{1, 2, 3})
+
+	if len(comp.Args()) != 6 {
+		t.Fatalf("wrong number of arguments, expected %d but got %d", 6, len(comp.Args()))
+	}
+}
+
 func TestComposer_AddExpr_sql(t *testing.T) {
 	comp := pqcomp.New(0, 0)
 	comp.AddExpr("int64-valid", pqcomp.E, &sql.NullInt64{Int64: 1, Valid: true})
@@ -128,7 +138,6 @@ func TestComposer_AddExpr_sql(t *testing.T) {
 	if len(comp.Args()) != 4 {
 		t.Fatalf("wrong number of arguments, expected %d but got %d", 4, len(comp.Args()))
 	}
-
 }
 
 func TestComposer_AddExpr_time(t *testing.T) {

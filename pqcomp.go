@@ -8,32 +8,48 @@ import (
 )
 
 const (
-	// LIKE represents LIKE operator.
-	LIKE = "LIKE"
-	// IN represents IN operator.
-	IN = "IN"
-	// NULL represents NULL keyword.
-	NULL = "NULL"
-	// NOT_NULL represents NOT NULL keywords.
-	NOT_NULL = "NOT NULL"
-	// IS represents IS operator.
-	IS = "IS"
-	// E represents equal operator.
-	E = "="
-	// NE represents not equal operator.
-	NE = "<>"
-	// GT represents greater than operator.
-	GT = ">"
-	// LT represents lower than operator.
-	LT = "<"
+	// Like represents LIKE operator.
+	Like = "LIKE"
+	// In represents IN operator.
+	In = "IN"
+	// IsNull represents IS NULL keywords.
+	IsNull = "IS NULL"
+	// IsNotNull represents IS NOT NULL keywords.
+	IsNotNull = "IS NOT NULL"
+	// Is represents IS operator.
+	Is = "IS"
+	// Equal represents equal operator.
+	Equal = "="
+	// NotEqual represents not equal operator.
+	NotEqual = "<>"
+	// GreaterThan represents greater than operator.
+	GreaterThan = ">"
+	// LessThan represents lower than operator.
+	LessThan = "<"
 	// GTE represents greater than or equal operator.
-	GTE = ">="
+	GreaterThanOrEqual = ">="
 	// LTE represents lower than or equal operator.
-	LTE = "<="
+	LessThanOrEqual = "<="
 	// DESC represents descendant way of sorting.
-	DESC = "DESC"
+	Descendant = "DESC"
 	// ASC represents ascendant way of sorting.
-	ASC = "ASC"
+	Ascendant = "ASC"
+	// Any ...
+	Any = "ANY"
+	// All ...
+	All = "ALL"
+	// Contains ...
+	Contains = "@>"
+	// IsContainedBy ...
+	IsContainedBy = "<@"
+	// Overlap ...
+	Overlap = "??"
+	// Exists ...
+	Exists = "?"
+	// ExistsAny ...`
+	ExistsAny = "?|"
+	// ExistsAll ...
+	ExistsAll = "?&"
 )
 
 // Appearer wraps Appear function.
@@ -125,6 +141,66 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 		c.addExpr(key, operator, value)
 	case bool:
 		c.addExpr(key, operator, value)
+	case []string:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []int64:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []int32:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []int16:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []int8:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []int:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []float32:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []float64:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []uint64:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []uint32:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []uint16:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []uint:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []complex64:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []complex128:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
+	case []bool:
+		for _, vv := range v {
+			c.addExpr(key, operator, vv)
+		}
 	case *time.Time:
 		if v != nil && !v.IsZero() {
 			c.addExpr(key, operator, value)
