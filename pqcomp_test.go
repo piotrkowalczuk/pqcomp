@@ -51,11 +51,11 @@ func TestComposer_AddExpr(t *testing.T) {
 	for i := 0; i < max; i++ {
 		switch i % 3 {
 		case 0:
-			parent.AddExpr(fmt.Sprintf("column_parent_%d", i), pqcomp.E, i)
+			parent.AddExpr(fmt.Sprintf("column_parent_%d", i), pqcomp.Equal, i)
 		case 1:
-			where.AddExpr(fmt.Sprintf("column_where_%d", i), pqcomp.E, i)
+			where.AddExpr(fmt.Sprintf("column_where_%d", i), pqcomp.Equal, i)
 		case 2:
-			update.AddExpr(fmt.Sprintf("column_update_%d", i), pqcomp.E, i)
+			update.AddExpr(fmt.Sprintf("column_update_%d", i), pqcomp.Equal, i)
 		}
 	}
 
@@ -99,7 +99,7 @@ func TestComposer_AddExpr_types(t *testing.T) {
 CasesLoop:
 	for k, v := range cases {
 		comp := pqcomp.New(0, 0)
-		comp.AddExpr(k, pqcomp.E, v)
+		comp.AddExpr(k, pqcomp.Equal, v)
 		args := comp.Args()
 
 		if len(args) != 1 {
@@ -126,14 +126,14 @@ func TestComposer_AddArg_slices(t *testing.T) {
 
 func TestComposer_AddExpr_sql(t *testing.T) {
 	comp := pqcomp.New(0, 0)
-	comp.AddExpr("int64-valid", pqcomp.E, &sql.NullInt64{Int64: 1, Valid: true})
-	comp.AddExpr("int64-invalid", pqcomp.E, &sql.NullInt64{Int64: 2, Valid: false})
-	comp.AddExpr("string-valid", pqcomp.E, &sql.NullString{String: "3", Valid: true})
-	comp.AddExpr("string-invalid", pqcomp.E, &sql.NullString{String: "4", Valid: false})
-	comp.AddExpr("float64-valid", pqcomp.E, &sql.NullFloat64{Float64: 5, Valid: true})
-	comp.AddExpr("float64-invalid", pqcomp.E, &sql.NullFloat64{Float64: 6, Valid: false})
-	comp.AddExpr("bool-valid", pqcomp.E, &sql.NullBool{Bool: true, Valid: true})
-	comp.AddExpr("bool-invalid", pqcomp.E, &sql.NullBool{Bool: true, Valid: false})
+	comp.AddExpr("int64-valid", pqcomp.Equal, &sql.NullInt64{Int64: 1, Valid: true})
+	comp.AddExpr("int64-invalid", pqcomp.Equal, &sql.NullInt64{Int64: 2, Valid: false})
+	comp.AddExpr("string-valid", pqcomp.Equal, &sql.NullString{String: "3", Valid: true})
+	comp.AddExpr("string-invalid", pqcomp.Equal, &sql.NullString{String: "4", Valid: false})
+	comp.AddExpr("float64-valid", pqcomp.Equal, &sql.NullFloat64{Float64: 5, Valid: true})
+	comp.AddExpr("float64-invalid", pqcomp.Equal, &sql.NullFloat64{Float64: 6, Valid: false})
+	comp.AddExpr("bool-valid", pqcomp.Equal, &sql.NullBool{Bool: true, Valid: true})
+	comp.AddExpr("bool-invalid", pqcomp.Equal, &sql.NullBool{Bool: true, Valid: false})
 
 	if len(comp.Args()) != 4 {
 		t.Fatalf("wrong number of arguments, expected %d but got %d", 4, len(comp.Args()))
@@ -145,11 +145,11 @@ func TestComposer_AddExpr_time(t *testing.T) {
 	now := time.Now()
 
 	comp := pqcomp.New(0, 0)
-	comp.AddExpr("time", pqcomp.E, now)
-	comp.AddExpr("time-zero", pqcomp.E, time.Time{})
-	comp.AddExpr("time-pointer", pqcomp.E, &now)
-	comp.AddExpr("time-pointer-zero", pqcomp.E, &time.Time{})
-	comp.AddExpr("time-pointer-zero", pqcomp.E, tt)
+	comp.AddExpr("time", pqcomp.Equal, now)
+	comp.AddExpr("time-zero", pqcomp.Equal, time.Time{})
+	comp.AddExpr("time-pointer", pqcomp.Equal, &now)
+	comp.AddExpr("time-pointer-zero", pqcomp.Equal, &time.Time{})
+	comp.AddExpr("time-pointer-zero", pqcomp.Equal, tt)
 
 	if len(comp.Args()) != 2 {
 		t.Fatalf("wrong number of arguments, expected %d but got %d", 2, len(comp.Args()))
@@ -160,9 +160,9 @@ func TestComposer_AddExpr_time(t *testing.T) {
 func TestComposer_AddExpr_nil(t *testing.T) {
 	comp := pqcomp.New(0, 0)
 	func(comp *pqcomp.Composer, s *sql.NullString, i *sql.NullInt64) {
-		comp.AddExpr("v1", pqcomp.E, nil)
-		comp.AddExpr("v2", pqcomp.E, s)
-		comp.AddExpr("v3", pqcomp.E, i)
+		comp.AddExpr("v1", pqcomp.Equal, nil)
+		comp.AddExpr("v2", pqcomp.Equal, s)
+		comp.AddExpr("v3", pqcomp.Equal, i)
 	}(comp, nil, nil)
 
 	if comp.Len() != 0 {
@@ -174,14 +174,14 @@ func TestComposer_Len(t *testing.T) {
 	comp := pqcomp.New(1, 1, 2)
 
 	compA := comp.Compose()
-	compA.AddExpr("column", pqcomp.E, "value")
-	compA.AddExpr("column", pqcomp.E, "value")
+	compA.AddExpr("column", pqcomp.Equal, "value")
+	compA.AddExpr("column", pqcomp.Equal, "value")
 
 	compB := comp.Compose()
-	compB.AddExpr("column", pqcomp.E, "value")
-	compB.AddExpr("column", pqcomp.E, "value")
-	compB.AddExpr("column", pqcomp.E, "value")
-	compB.AddExpr("column", pqcomp.E, "value")
+	compB.AddExpr("column", pqcomp.Equal, "value")
+	compB.AddExpr("column", pqcomp.Equal, "value")
+	compB.AddExpr("column", pqcomp.Equal, "value")
+	compB.AddExpr("column", pqcomp.Equal, "value")
 
 	if comp.Len() != 0 {
 		t.Errorf("wrong parent composer length, got %d but expected %d", comp.Len(), 0)
@@ -274,7 +274,7 @@ func TestComposer_ExprOptional(t *testing.T) {
 	comp = pqcomp.New(0, len(success))
 
 	for _, s := range success {
-		comp.AddExpr("column", pqcomp.E, s)
+		comp.AddExpr("column", pqcomp.Equal, s)
 	}
 
 	if comp.Len() != len(success) {
@@ -291,7 +291,7 @@ func TestComposer_ExprOptional(t *testing.T) {
 	comp = pqcomp.New(0, 0)
 
 	for _, f := range failure {
-		comp.AddExpr("column", pqcomp.E, f)
+		comp.AddExpr("column", pqcomp.Equal, f)
 	}
 
 	if comp.Len() != 0 {
@@ -327,12 +327,12 @@ func prepareComposers(lengthA, lengthB int) (comp, compA, compB *pqcomp.Composer
 
 	compA = comp.Compose()
 	for i := 0; i < lengthA; i++ {
-		compA.AddExpr(fmt.Sprintf("column_%d", i), pqcomp.E, "value")
+		compA.AddExpr(fmt.Sprintf("column_%d", i), pqcomp.Equal, "value")
 	}
 
 	compB = comp.Compose()
 	for i := 0; i < lengthB; i++ {
-		compB.AddExpr(fmt.Sprintf("column_%d", i), pqcomp.E, "value")
+		compB.AddExpr(fmt.Sprintf("column_%d", i), pqcomp.Equal, "value")
 	}
 
 	return
