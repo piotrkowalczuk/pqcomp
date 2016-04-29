@@ -52,6 +52,11 @@ const (
 	ExistsAll = "?&"
 )
 
+var (
+	// Empty ...
+	Empty = struct{}{}
+)
+
 // Appearer wraps Appear function.
 type Appearer interface {
 	// Appear returns true if object should be used by AddExpr method.
@@ -72,8 +77,8 @@ type Composer struct {
 // New allocates new Composer and pre-allocates space for given amount of arguments and expressions.
 // Each child expression passed to the constructor creates new child Composer
 // with pre-allocated space for expressions.
-func New(arguments, nbOfExpressions int, nbOfChildExpressions ...int) *Composer {
-	return neww(nil, arguments, nbOfExpressions, nbOfChildExpressions...)
+func New(args, nbOfExpressions int, nbOfExpressionsForEachChild ...int) *Composer {
+	return neww(nil, args, nbOfExpressions, nbOfExpressionsForEachChild...)
 }
 
 func neww(parent *Composer, args, pexpr int, cexpr ...int) *Composer {
@@ -105,6 +110,8 @@ func (c *Composer) AddExpr(key, operator string, value interface{}) {
 	}
 
 	switch v := value.(type) {
+	case struct{}:
+		c.addExpr(key, operator, value)
 	case []byte:
 		if v != nil {
 			c.addExpr(key, operator, value)

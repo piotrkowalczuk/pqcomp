@@ -18,12 +18,12 @@ func Example() {
 
 	comp.AddArg(10)
 
-	update.AddExpr("u.username", pqcomp.E, "johnsnow")
-	update.AddExpr("u.first_name", pqcomp.E, "John")
-	update.AddExpr("u.last_name", pqcomp.E, &sql.NullString{String: "Snow", Valid: true})
+	update.AddExpr("u.username", pqcomp.Equal, "johnsnow")
+	update.AddExpr("u.first_name", pqcomp.Equal, "John")
+	update.AddExpr("u.last_name", pqcomp.Equal, &sql.NullString{String: "Snow", Valid: true})
 
-	where.AddExpr("u.id", pqcomp.E, 1)
-	where.AddExpr("u.age", pqcomp.GT, &sql.NullInt64{Int64: 1000, Valid: false})
+	where.AddExpr("u.id", pqcomp.Equal, 1)
+	where.AddExpr("u.age", pqcomp.GreaterThan, &sql.NullInt64{Int64: 1000, Valid: false})
 
 	if update.Len() == 0 || where.Len() == 0 {
 		return

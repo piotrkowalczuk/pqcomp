@@ -116,8 +116,8 @@ CasesLoop:
 
 func TestComposer_AddArg_slices(t *testing.T) {
 	comp := pqcomp.New(0, 0)
-	comp.AddExpr("[]string", pqcomp.IN, []string{"1", "2", "3"})
-	comp.AddExpr("[]int64", pqcomp.IN, []int64{1, 2, 3})
+	comp.AddExpr("[]string", pqcomp.In, []string{"1", "2", "3"})
+	comp.AddExpr("[]int64", pqcomp.In, []int64{1, 2, 3})
 
 	if len(comp.Args()) != 6 {
 		t.Fatalf("wrong number of arguments, expected %d but got %d", 6, len(comp.Args()))
@@ -242,7 +242,7 @@ func TestComposer_Expr(t *testing.T) {
 	_, compA, compB := prepareComposers(lengthA, lengthB)
 
 	j := 0
-	expected := pqcomp.E
+	expected := pqcomp.Equal
 	for compA.Next() {
 		if compA.Oper() != expected {
 			t.Errorf("wrong expression for composer A, expected %s but got %s", expected, compA.Oper())

@@ -36,7 +36,7 @@ func BenchmarkComposer_alot_huge(b *testing.B) {
 
 func benchmarkComposer(b *testing.B, args, pexpr int, cexpr ...int) {
 	comp := make([]*pqcomp.Composer, 0, b.N)
-	key, expression, arg := "column", pqcomp.E, []byte("value")
+	key, expression, arg := "column", pqcomp.Equal, []byte("value")
 	for n := 0; n < b.N; n++ {
 		comp = append(comp, pqcomp.New(args, pexpr, cexpr...))
 	}
@@ -67,16 +67,16 @@ func BenchmarkComposer_real(b *testing.B) {
 		arg         interface{}
 	}
 	exprs := []expression{
-		{"u.first_name", pqcomp.E, "johnsnow@gmail.com"},
-		{"u.last_name", pqcomp.E, "Snow"},
-		{"u.is_superuser", pqcomp.E, false},
-		{"u.is_staff", pqcomp.E, false},
-		{"u.details", pqcomp.E, "some information"},
-		{"u.phone", pqcomp.E, "+48123123123"},
-		{"u.address", pqcomp.E, "Kazimierza Wielkiego 1"},
-		{"u.country", pqcomp.E, "Poland"},
-		{"u.city", pqcomp.E, "Wrocław"},
-		{"u.zipcode", pqcomp.E, "123456"},
+		{"u.first_name", pqcomp.Equal, "johnsnow@gmail.com"},
+		{"u.last_name", pqcomp.Equal, "Snow"},
+		{"u.is_superuser", pqcomp.Equal, false},
+		{"u.is_staff", pqcomp.Equal, false},
+		{"u.details", pqcomp.Equal, "some information"},
+		{"u.phone", pqcomp.Equal, "+48123123123"},
+		{"u.address", pqcomp.Equal, "Kazimierza Wielkiego 1"},
+		{"u.country", pqcomp.Equal, "Poland"},
+		{"u.city", pqcomp.Equal, "Wrocław"},
+		{"u.zipcode", pqcomp.Equal, "123456"},
 	}
 	args := []interface{}{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
@@ -128,7 +128,7 @@ func BenchmarkComposer_AddExpr(b *testing.B) {
 	b.ReportAllocs()
 
 	for n := 0; n < b.N; n++ {
-		comp.AddExpr(column, pqcomp.E, arg)
+		comp.AddExpr(column, pqcomp.Equal, arg)
 	}
 }
 
@@ -156,16 +156,16 @@ func BenchmarkComposer_Args(b *testing.B) {
 	comp.AddArg("arg8")
 	comp.AddArg("arg9")
 	comp.AddArg("arg10")
-	comp.AddExpr("column1", pqcomp.E, "expr1")
-	comp.AddExpr("column2", pqcomp.E, "expr2")
-	comp.AddExpr("column3", pqcomp.E, "expr3")
-	comp.AddExpr("column4", pqcomp.E, "expr4")
-	comp.AddExpr("column5", pqcomp.E, "expr5")
-	comp.AddExpr("column6", pqcomp.E, "expr6")
-	comp.AddExpr("column7", pqcomp.E, "expr7")
-	comp.AddExpr("column8", pqcomp.E, "expr8")
-	comp.AddExpr("column9", pqcomp.E, "expr9")
-	comp.AddExpr("column10", pqcomp.E, "expr10")
+	comp.AddExpr("column1", pqcomp.Equal, "expr1")
+	comp.AddExpr("column2", pqcomp.Equal, "expr2")
+	comp.AddExpr("column3", pqcomp.Equal, "expr3")
+	comp.AddExpr("column4", pqcomp.Equal, "expr4")
+	comp.AddExpr("column5", pqcomp.Equal, "expr5")
+	comp.AddExpr("column6", pqcomp.Equal, "expr6")
+	comp.AddExpr("column7", pqcomp.Equal, "expr7")
+	comp.AddExpr("column8", pqcomp.Equal, "expr8")
+	comp.AddExpr("column9", pqcomp.Equal, "expr9")
+	comp.AddExpr("column10", pqcomp.Equal, "expr10")
 
 	b.ResetTimer()
 	b.ReportAllocs()
